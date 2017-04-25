@@ -28,14 +28,19 @@ bind_port = {{ server.bind.port }}
 
 {% if server.backend.engine == "contrail" %}
 
-# TEMPORARY - until neutron v2 contrail package would be supported
-#api_extensions_path = extensions:/usr/lib/python2.7/dist-packages/neutron_plugin_contrail/extensions:/usr/lib/python2.7/dist-packages/neutron_lbaas/extensions
+{% if server.get('lbaas', {}).get('providers', {}).get('Opencontrail', {}).get('engine', 'contrail') == 'contrail-lbaasv2' %}
+api_extensions_path = extensions:/usr/lib/python2.7/dist-packages/neutron_plugin_contrail/extensions:/usr/lib/python2.7/dist-packages/neutron_lbaas/extensions
+service_plugins = neutron_plugin_contrail.plugins.opencontrail.loadbalancer.v2.plugin.LoadBalancerPluginV2
+{% else %}
 api_extensions_path = extensions:/usr/lib/python2.7/dist-packages/neutron_plugin_contrail/extensions
-# The core plugin Neutron will use (string value)
-core_plugin = neutron_plugin_contrail.plugins.opencontrail.contrail_plugin.NeutronPluginContrailCoreV2
 
 # TEMPORARY - until neutron v2 contrail package would be supported
 #service_plugins = neutron_plugin_contrail.plugins.opencontrail.loadbalancer.v2.plugin.LoadBalancerPluginV2
+{% endif %}
+
+# The core plugin Neutron will use (string value)
+core_plugin = neutron_plugin_contrail.plugins.opencontrail.contrail_plugin.NeutronPluginContrailCoreV2
+
 {% elif server.backend.engine == "ml2" %}
 
 core_plugin = neutron.plugins.ml2.plugin.Ml2Plugin
@@ -1645,6 +1650,13 @@ user={{ lbaas.controller_user }}
 password={{ lbaas.controller_password }}
 cloud={{ lbaas.controller_cloud_name }}
 {%- endif -%}
+
+{%- if lbaas.engine == 'contrail-lbaasv2' -%}
+
+service_provider = LOADBALANCERV2:Opencontrail:neutron_plugin_contrail.plugins.opencontrail.loadbalancer.driver.OpencontrailLoadbalancerDriver:default
+
+{% include "neutron/files/"+server.version+"/ContrailPlugin.ini" %}
+{% endif %}
 
 {%- endfor -%}
 
