@@ -89,6 +89,19 @@ pillar should be define only if it should be disabled.
       lbaas:
         enabled: disabled
 
+If you want to enable contrail LBaaSv2, then configure pillar like this:
+
+.. code-block:: yaml
+
+  neutron:
+    server:
+      lbaas:
+        enabled: true
+        providers:
+          Opencontrail:
+            engine: contrail-lbaasv2
+
+
 Neutron VXLAN tenant networks with Network nodes
 ------------------------------------------------
 
