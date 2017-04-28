@@ -828,6 +828,10 @@ admin_tenant_name={{ server.backend.tenant }}
 auth_region={{ server.identity.region }}
 auth_protocol=http
 revocation_cache_time = 10
+{#- Comment out the auth_type = password, as it will break the Vnc_Api behaviour (needed for LBAASv2) #}
+{%- if server.get('lbaas', {}).get('providers', {}).get('Opencontrail', {}).get('engine', 'contrail') == 'contrail-lbaasv2' %}
+#
+{%- endif -%}
 auth_type = password
 auth_host = {{ server.identity.host }}
 auth_port = 35357
