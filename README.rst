@@ -132,7 +132,7 @@ If you want to enable contrail LBaaSv2, then configure pillar like this:
       lbaas:
         enabled: true
         providers:
-          Opencontrail:
+          opencontrail:
             engine: contrail-lbaasv2
 
 
