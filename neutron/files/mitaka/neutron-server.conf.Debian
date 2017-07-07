@@ -839,6 +839,7 @@ admin_tenant_name={{ server.backend.tenant }}
 auth_region={{ server.identity.region }}
 auth_protocol=http
 revocation_cache_time = 10
+
 {% if server.backend.engine == "contrail" %}
 # LBaaS contrail neutron plugin for versions 3.x expects auth_type to be 
 # 'keystone' or 'noauth'
@@ -1673,6 +1674,13 @@ user={{ lbaas.controller_user }}
 password={{ lbaas.controller_password }}
 cloud={{ lbaas.controller_cloud_name }}
 {%- endif -%}
+
+{%- if lbaas.engine == 'contrail-lbaasv2' -%}
+
+service_provider = LOADBALANCERV2:Opencontrail:neutron_plugin_contrail.plugins.opencontrail.loadbalancer.driver.OpencontrailLoadbalancerDriver:default
+
+{% include "neutron/files/"+server.version+"/ContrailPlugin.ini" %}
+{% endif %}
 
 {%- endfor -%}
 

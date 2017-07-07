@@ -123,6 +123,19 @@ Enable CORS parameters
           max_age: 86400
 
 
+If you want to enable contrail LBaaSv2, then configure pillar like this:
+
+.. code-block:: yaml
+
+  neutron:
+    server:
+      lbaas:
+        enabled: true
+        providers:
+          Opencontrail:
+            engine: contrail-lbaasv2
+
+
 Neutron VXLAN tenant networks with Network nodes
 ------------------------------------------------
 
